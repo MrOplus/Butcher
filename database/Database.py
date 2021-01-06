@@ -9,6 +9,9 @@ class Database:
     def get_zone(self, zone):
         return self.connection[self.database]['records'].find_one({"zone": zone})
 
+    def get_all_zones(self):
+        return self.connection[self.database]['records'].find()
+
     @staticmethod
     def get_records(zone: dict, rtype: str):
         records = zone['records']

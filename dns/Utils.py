@@ -13,6 +13,7 @@ class Utils:
         elif type(label) is str:
             if len(label) > 0 and label.endswith("."):
                 return label[:-1]
+        return None
 
     @staticmethod
     def mail_to_label(label : str):

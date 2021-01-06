@@ -3,7 +3,9 @@ from dns import DNSParser, Utils
 import binascii
 from tld import get_tld
 import yaml
+import threading,queue
 
+a = queue.Queue()
 
 def main():
     config_file = open('config.yaml', mode='r')
@@ -13,8 +15,9 @@ def main():
     packet = DNSParser(packet)
     database = Database(config['database']['connection_string'],
                         config['database']['database_name'])
+    zones =  database.get_all_zones()
     print(packet.get_question())
-    query = str(packet.get_question().get_qname())
+    query = Utils.label_to_str(packet.get_question().get_qname())
     tld = get_tld(query, fix_protocol=True, as_object=True, fail_silently=True)
     if tld is None:
         # todo handle response

@@ -13,11 +13,13 @@ class Utils:
         elif type(label) is str:
             if len(label) > 0 and label.endswith("."):
                 return label[:-1]
+            else:
+                return label
         return None
 
     @staticmethod
-    def mail_to_label(label : str):
-        label = label.lower().replace("@",".")
+    def mail_to_label(label: str):
+        label = label.lower().replace("@", ".")
         return DNSLabel(label)
 
     @staticmethod

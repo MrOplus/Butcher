@@ -2,3 +2,6 @@ database :
   connection_string : "mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass&ssl=false"
   database_name : "dns_records"
 verbose : true
+logger:
+  filename : 'logs.log'
+  level: 10

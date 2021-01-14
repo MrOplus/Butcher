@@ -7,7 +7,7 @@ from logger import Logger
 
 def main():
     RuntimeConfig.setup()
-    Logger.setup(filename='logs.log', level=10)
+    Logger.setup(**RuntimeConfig.logger())
     database = Database(RuntimeConfig.database()['connection_string'],
                         RuntimeConfig.database()['database_name'])
 

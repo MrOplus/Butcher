@@ -16,21 +16,34 @@ class DNSParser:
             return self.record.questions[0]
         return None
 
-    def get_a_answer(self, ip: str, ttl: int):
+    def get_a_answer(self, answers):
         reply = self.record.reply()
-        reply.add_answer(RR(rname=self.get_question().get_qname(), rtype=QTYPE.A, ttl=ttl, rdata=A(ip)))
+        if type(answers) is list:
+            for x in answers:
+                reply.add_answer(RR(rname=self.get_question().get_qname(), rtype=QTYPE.A, ttl=answers['ttl'], rdata=A(x['value'])))
+        elif type(answers) is dict:
+            reply.add_answer(RR(rname=self.get_question().get_qname(), rtype=QTYPE.A, ttl=answers['ttl'], rdata=A(answers['value'])))
         return reply
 
-    def get_aaaa_answer(self, ip: str, ttl: int):
+    def get_aaaa_answer(self, answers):
         reply = self.record.reply()
-        reply.add_answer(RR(rname=self.get_question().get_qname(), rtype=QTYPE.AAAA, ttl=ttl, rdata=AAAA(ip)))
-        return reply
-
-    def get_txt_answer(self, txts: list, ttl: int):
-        reply = self.record.reply()
-        for r in txts:
+        if type(answers) is list:
+            for x in answers:
+                reply.add_answer(RR(rname=self.get_question().get_qname(), rtype=QTYPE.AAAA, ttl=x['ttl'], rdata=AAAA(x['value'])))
+        elif type(answers) is dict:
             reply.add_answer(
-                RR(rname=self.get_question().get_qname(), rtype=QTYPE.TXT, ttl=ttl, rdata=TXT(r['value'])))
+                RR(rname=self.get_question().get_qname(), rtype=QTYPE.AAAA, ttl=answers['ttl'], rdata=AAAA(answers['value'])))
+        return reply
+
+    def get_txt_answer(self, answers):
+        reply = self.record.reply()
+        if type(answers) is list:
+            for x in answers:
+                reply.add_answer(
+                    RR(rname=self.get_question().get_qname(), rtype=QTYPE.TXT, ttl=x['ttl'], rdata=TXT(x['value'])))
+        elif type(answers) is dict:
+            reply.add_answer(
+                RR(rname=self.get_question().get_qname(), rtype=QTYPE.TXT, ttl=answers['ttl'], rdata=TXT(answers['value'])))
         return reply
 
     def get_soa_answer(self, ttl: int, domain: str, email: str, times: tuple):

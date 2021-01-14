@@ -34,3 +34,7 @@ class RuntimeConfig:
     @staticmethod
     def verbose():
         return RuntimeConfig.__instance__.config['verbose']
+
+    @staticmethod
+    def logger():
+        return RuntimeConfig.__instance__.config['logger']

@@ -46,11 +46,11 @@ class PacketHandler(socketserver.DatagramRequestHandler):
                 return
             res = None
             if query_type == "A":
-                res = packet.get_a_answer(record['value'], record['ttl'])
+                res = packet.get_a_answer(record)
             elif query_type == "AAAA":
-                res = packet.get_aaaa_answer(record['value'], record['ttl'])
+                res = packet.get_aaaa_answer(record)
             elif query_type == "TXT":
-                res = packet.get_txt_answer(record['value'], record['ttl'])
+                res = packet.get_txt_answer(record)
             if res is None:
                 self.wfile.write(packet.null_response())
             else:

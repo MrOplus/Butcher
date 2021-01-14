@@ -38,3 +38,7 @@ class RuntimeConfig:
     @staticmethod
     def logger():
         return RuntimeConfig.__instance__.config['logger']
+
+    @staticmethod
+    def network():
+        return RuntimeConfig.__instance__.config['network']

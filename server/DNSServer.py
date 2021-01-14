@@ -1,6 +1,6 @@
 from socketserver import ThreadingUDPServer
 from .PacketHandler import PacketHandler
-
+from config import RuntimeConfig
 
 class DNSServer:
     def __init__(self) -> None:
@@ -11,7 +11,7 @@ class DNSServer:
 
     def run_for_ever(self):
         try:
-            address = ("0.0.0.0", 10530)
+            address = (RuntimeConfig.network()['address'], RuntimeConfig.network()['port'])
             self.server = ThreadingUDPServer(address, PacketHandler)
             self.server.serve_forever()
         except KeyboardInterrupt:

@@ -8,8 +8,7 @@ from logger import Logger
 def main():
     RuntimeConfig.setup()
     Logger.setup(**RuntimeConfig.logger())
-    database = Database(RuntimeConfig.database()['connection_string'],
-                        RuntimeConfig.database()['database_name'])
+    database = Database(RuntimeConfig.config())
 
     zones = database.get_all_zones()
     Database.in_memory_database = ZoneUtils.convert_zones_to_python_structure(zones)

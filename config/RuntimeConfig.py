@@ -28,8 +28,8 @@ class RuntimeConfig:
         return RuntimeConfig.__instance__
 
     @staticmethod
-    def database() -> dict:
-        return RuntimeConfig.__instance__.config['database']
+    def config():
+        return RuntimeConfig.__instance__.config['config']['path']
 
     @staticmethod
     def verbose():

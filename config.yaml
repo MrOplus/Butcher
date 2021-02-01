@@ -1,9 +1,8 @@
-database :
-  connection_string : "mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass&ssl=false"
-  database_name : "dns_records"
+config :
+  path : C:\xampp\htdocs\ButcherFront\storage\app\config.json
 verbose : true
 logger:
-  filename : 'logs.log'
+  stream : true
   level: 10
 network :
   address: '0.0.0.0'

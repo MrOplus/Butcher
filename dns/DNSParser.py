@@ -20,7 +20,7 @@ class DNSParser:
         reply = self.record.reply()
         if type(answers) is list:
             for x in answers:
-                reply.add_answer(RR(rname=self.get_question().get_qname(), rtype=QTYPE.A, ttl=answers['ttl'], rdata=A(x['value'])))
+                reply.add_answer(RR(rname=self.get_question().get_qname(), rtype=QTYPE.A, ttl=x['ttl'], rdata=A(x['value'])))
         elif type(answers) is dict:
             reply.add_answer(RR(rname=self.get_question().get_qname(), rtype=QTYPE.A, ttl=answers['ttl'], rdata=A(answers['value'])))
         return reply
@@ -52,11 +52,11 @@ class DNSParser:
             RR(rname=self.get_question().get_qname(), rtype=QTYPE.SOA, ttl=ttl, rdata=SOA(domain, email, times)))
         return reply
 
-    def get_ns_record(self, ns_record: list, ttl: int):
+    def get_ns_answer(self, ns_record: list):
         reply = self.record.reply()
         for ns in ns_record:
             reply.add_answer(
-                RR(rname=self.get_question().get_qname(), rtype=QTYPE.NS, ttl=ttl, rdata=NS(ns['value']))
+                RR(rname=self.get_question().get_qname(), rtype=QTYPE.NS, ttl=ns['ttl'], rdata=NS(ns['value']))
             )
         return reply
 

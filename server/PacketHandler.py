@@ -27,20 +27,32 @@ class PacketHandler(socketserver.DatagramRequestHandler):
             return
         query_type = packet.get_rtype()
         if query_type == "SOA":
-            if query == zone['zone']:
-                ns_record = Database.get_primary_ns_record(zone)
+            if query == zone['name']:  # SOA only for root , who cares
+                ns_record = Database.find_memory_record(zone, 'NS', '')
+                if ns_record is None:
+                    self.wfile.write(packet.null_response())
+                    return
                 owner = Utils.mail_to_label(zone['owner'])
-                soa_record = zone['SOA']
-                times = (soa_record['serial'], soa_record['refresh'], soa_record['retry'],
-                         soa_record['expire'], soa_record['ttl'])
+                times = (zone['id'], 7200, 3600,
+                         1209600, 60)
+                if len(ns_record) > 0:
+                    ns = ns_record[0]['value']
+                else:
+                    ns = ns_record['value']
                 self.wfile.write(
-                    packet.get_soa_answer(soa_record['ttl'], ns_record, owner, times).pack())
+                    packet.get_soa_answer(60, ns, owner, times).pack())
             else:
                 self.wfile.write(packet.null_response())
-        elif query_type == "NS":
-            self.wfile.write(packet.get_ns_record(sorted(zone['NS'], key=lambda x: x['order']), 60).pack())
-        elif query_type == "AAAA" or query_type == "A" or query_type == "TXT":
-            record = Database.find_memory_record(zone, query_type, tld.subdomain)
+        # elif query_type == "NS":
+        #     subdomain = '@' if tld.subdomain == '' else tld.subdomain
+        #     lst = Database.find_memory_record(zone,'NS',subdomain)
+        #     if lst is None :
+        #         self.rfile.write(packet.null_response())
+        #         return
+        #     self.wfile.write(packet.get_ns_answer(sorted(lst, key=lambda x: x['order']), 60).pack())
+        elif query_type == "AAAA" or query_type == "A" or query_type == "TXT" or query_type == "NS":
+            subdomain = '@' if tld.subdomain == '' else tld.subdomain
+            record = Database.find_memory_record(zone, query_type, subdomain)
             if record is None:
                 self.wfile.write(packet.null_response())
                 return
@@ -51,6 +63,8 @@ class PacketHandler(socketserver.DatagramRequestHandler):
                 res = packet.get_aaaa_answer(record)
             elif query_type == "TXT":
                 res = packet.get_txt_answer(record)
+            elif query_type == "NS" :
+                res = packet.get_ns_answer(record)
             if res is None:
                 self.wfile.write(packet.null_response())
             else:

@@ -1,4 +1,5 @@
 import logging
+import sys
 
 
 class Logger:
@@ -11,7 +12,11 @@ class Logger:
             Logger.log = logging
 
     def configure(self, **config):
-        logging.basicConfig(**config)
+        if config['stream'] == True:
+            logging.basicConfig(stream=sys.stdout,level=config['level'])
+        else:
+            logging.basicConfig(**config)
+
 
     @staticmethod
     def get_instance():

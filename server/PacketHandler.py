@@ -43,13 +43,6 @@ class PacketHandler(socketserver.DatagramRequestHandler):
                     packet.get_soa_answer(60, ns, owner, times).pack())
             else:
                 self.wfile.write(packet.null_response())
-        # elif query_type == "NS":
-        #     subdomain = '@' if tld.subdomain == '' else tld.subdomain
-        #     lst = Database.find_memory_record(zone,'NS',subdomain)
-        #     if lst is None :
-        #         self.rfile.write(packet.null_response())
-        #         return
-        #     self.wfile.write(packet.get_ns_answer(sorted(lst, key=lambda x: x['order']), 60).pack())
         elif query_type == "AAAA" or query_type == "A" or query_type == "TXT" or query_type == "NS":
             subdomain = '@' if tld.subdomain == '' else tld.subdomain
             record = Database.find_memory_record(zone, query_type, subdomain)

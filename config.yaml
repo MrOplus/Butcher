@@ -1,5 +1,5 @@
 config :
-  path : C:\xampp\htdocs\ButcherFront\storage\app\config.json
+  path : config.json
 verbose : true
 logger:
   stream : true

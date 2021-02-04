@@ -1,3 +1,4 @@
+import time
 from threading import Thread
 import os
 
@@ -23,6 +24,7 @@ class FileWatcher:
     def fs_watcher(self):
         last_seen = os.stat(self.conf_file).st_mtime
         while True:
+            time.sleep(5)
             current_time = os.stat(self.conf_file).st_mtime
             if current_time > last_seen:
                 Logger.log.info("Config File has been changed")

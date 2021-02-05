@@ -375,4 +375,5 @@ dmypy.json
 .prof
 
 config.json
+config.yaml
 # End of https://www.toptal.com/developers/gitignore/api/python,jetbrains,pycharm,pycharm+all

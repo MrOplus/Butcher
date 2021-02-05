@@ -1,6 +1,6 @@
 from typing import Optional
 
-from dnslib import QTYPE, CLASS, DNSRecord, DNSQuestion, A, NS, RR, SOA, DNSLabel, AAAA, TXT
+from dnslib import QTYPE, CLASS, DNSRecord, DNSQuestion, A, NS, RR, SOA, DNSLabel, AAAA, TXT, CNAME
 
 
 class DNSParser:
@@ -52,12 +52,15 @@ class DNSParser:
             RR(rname=self.get_question().get_qname(), rtype=QTYPE.SOA, ttl=ttl, rdata=SOA(domain, email, times)))
         return reply
 
-    def get_ns_answer(self, ns_record: list):
+    def get_ns_answer(self, answers):
         reply = self.record.reply()
-        for ns in ns_record:
+        if type(answers) is list:
+            for x in answers:
+                reply.add_answer(
+                    RR(rname=self.get_question().get_qname(), rtype=QTYPE.NS, ttl=x['ttl'], rdata=NS(x['value'])))
+        elif type(answers) is dict:
             reply.add_answer(
-                RR(rname=self.get_question().get_qname(), rtype=QTYPE.NS, ttl=ns['ttl'], rdata=NS(ns['value']))
-            )
+                RR(rname=self.get_question().get_qname(), rtype=QTYPE.NS, ttl=answers['ttl'], rdata=NS(answers['value'])))
         return reply
 
     def get_rtype(self):
@@ -66,3 +69,14 @@ class DNSParser:
     def null_response(self):
         reply = self.record.reply()
         return reply.pack()
+
+    def get_cname_answer(self, answers):
+        reply = self.record.reply()
+        if type(answers) is list:
+            for x in answers:
+                reply.add_answer(
+                    RR(rname=self.get_question().get_qname(), rtype=QTYPE.CNAME, ttl=x['ttl'], rdata=CNAME(x['value'])))
+        elif type(answers) is dict:
+            reply.add_answer(
+                RR(rname=self.get_question().get_qname(), rtype=QTYPE.CNAME, ttl=answers['ttl'], rdata=CNAME(answers['value'])))
+        return reply

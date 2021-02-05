@@ -43,7 +43,7 @@ class PacketHandler(socketserver.DatagramRequestHandler):
                     packet.get_soa_answer(60, ns, owner, times).pack())
             else:
                 self.wfile.write(packet.null_response())
-        elif query_type == "AAAA" or query_type == "A" or query_type == "TXT" or query_type == "NS":
+        elif query_type == "AAAA" or query_type == "A" or query_type == "TXT" or query_type == "NS" or query_type == "CNAME":
             subdomain = '@' if tld.subdomain == '' else tld.subdomain
             record = Database.find_memory_record(zone, query_type, subdomain)
             if record is None:
@@ -58,6 +58,8 @@ class PacketHandler(socketserver.DatagramRequestHandler):
                 res = packet.get_txt_answer(record)
             elif query_type == "NS" :
                 res = packet.get_ns_answer(record)
+            elif query_type == "CNAME":
+                res = packet.get_cname_answer(record)
             if res is None:
                 self.wfile.write(packet.null_response())
             else:

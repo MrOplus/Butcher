@@ -1,0 +1,9 @@
+config :
+  path : config.json
+verbose : true
+logger:
+  stream : true
+  level: 10
+network :
+  address: '0.0.0.0'
+  port : 10530

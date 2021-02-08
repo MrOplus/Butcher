@@ -25,6 +25,7 @@ class PacketHandler(socketserver.DatagramRequestHandler):
         if zone is None:
             self.wfile.write(packet.null_response())
             return
+        Logger.log.debug("Requested label : {}".format(packet.get_question().get_qname()))
         query_type = packet.get_rtype()
         if query_type == "SOA":
             if query == zone['name']:  # SOA only for root , who cares

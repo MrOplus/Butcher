@@ -1,0 +1,1 @@
+[{"id":1,"user_id":1,"name":"local.com","owner":"admin@local.com","records":[{"name":"@","A":"loadbalance","AAAA":"random","TXT":"all","CNAME":"loadbalance","NS":"all","entries":{"A":[{"type":"A","value":"127.0.0.1","ttl":60,"weight":1,"order":1}]}}]}]

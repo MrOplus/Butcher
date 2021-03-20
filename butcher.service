@@ -1,0 +1,13 @@
+#/etc/systemd/system/butcher.service
+[Unit]
+Description=Butcher
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/root/Butcher
+ExecStart=/usr/bin/python3 main.py
+Restart=always # or always, on-abort, etc
+
+[Install]
+WantedBy=multi-user.target

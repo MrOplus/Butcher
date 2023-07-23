@@ -7,3 +7,8 @@ logger:
 network :
   address: '0.0.0.0'
   port : 53
+redis :
+  host : 'localhost'
+  port : 6379
+  password : ''
+  db : 0

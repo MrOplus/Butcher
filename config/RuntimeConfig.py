@@ -42,3 +42,7 @@ class RuntimeConfig:
     @staticmethod
     def network():
         return RuntimeConfig.__instance__.config['network']
+
+    @staticmethod
+    def redis() -> dict:
+        return RuntimeConfig.__instance__.config['redis']

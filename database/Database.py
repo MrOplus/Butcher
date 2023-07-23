@@ -2,6 +2,8 @@ import json
 from queue import SimpleQueue
 import random
 
+from redisdb import RedisDB
+
 
 class Database:
     in_memory_database: list = None
@@ -27,9 +29,14 @@ class Database:
                     return None
                 if record[dns_type] == "loadbalance":
                     q = record['entries'][dns_type]  # type: SimpleQueue
+                    key = "{}.{}".format(subdomain, zone['name'])
+                    redis_value = RedisDB.get_instance().get(key)
+                    if redis_value is not None:
+                        return json.loads(redis_value)
                     if q.qsize() > 0:
                         result = q.get()
                         q.put(result)
+                        RedisDB.get_instance().setex(key,result['ttl'], json.dumps(result))
                         return result
                 elif record[dns_type] == "random":
                     return random.choice(record['entries'][dns_type])

@@ -46,3 +46,7 @@ class RuntimeConfig:
     @staticmethod
     def redis() -> dict:
         return RuntimeConfig.__instance__.config['redis']
+
+    @staticmethod
+    def cache_duration() -> int:
+        return RuntimeConfig.__instance__.config['cache_duration']

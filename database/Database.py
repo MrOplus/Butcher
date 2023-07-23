@@ -1,7 +1,10 @@
 import json
 from queue import SimpleQueue
 import random
+from venv import logger
 
+from config import RuntimeConfig
+from logger import Logger
 from redisdb import RedisDB
 
 
@@ -20,7 +23,7 @@ class Database:
         return next((x for x in Database.in_memory_database if x["name"] == fld), None)
 
     @staticmethod
-    def find_memory_record(zone, dns_type, subdomain):
+    def find_memory_record(zone, dns_type, subdomain,request_address):
         if subdomain == '':
             subdomain = '@'
         for record in zone['records']:
@@ -29,14 +32,16 @@ class Database:
                     return None
                 if record[dns_type] == "loadbalance":
                     q = record['entries'][dns_type]  # type: SimpleQueue
-                    key = "{}.{}".format(subdomain, zone['name'])
+                    key = "{}.{}:{}".format(subdomain, zone['name'], request_address)
                     redis_value = RedisDB.get_instance().get(key)
                     if redis_value is not None:
+                        Logger.log.debug("Cache hit for {}".format(key))
                         return json.loads(redis_value)
                     if q.qsize() > 0:
                         result = q.get()
                         q.put(result)
-                        RedisDB.get_instance().setex(key,result['ttl'], json.dumps(result))
+                        RedisDB.get_instance().setex(key,RuntimeConfig.get_instance().cache_duration(), json.dumps(result))
+                        Logger.log.debug("Cache miss for {}".format(key))
                         return result
                 elif record[dns_type] == "random":
                     return random.choice(record['entries'][dns_type])

@@ -1,6 +1,7 @@
 config :
   path : config.json
 verbose : true
+cache_duration: 3600
 logger:
   stream : true
   level: 10
